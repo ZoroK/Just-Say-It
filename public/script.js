@@ -38,7 +38,7 @@ async function startgame(){
       ii=0;
       recog=new  SpeechRecognition();
       recog.continuous=true;
-      recog.interimResults=false;
+      recog.interimResults=true;
       recog.addEventListener("result",checkres);
       await gogogo();
       return ;
@@ -60,12 +60,10 @@ async function startgame(){
   async function gogogo(){
     if(ii<10)
     {
-        displayword(dat[ii]);
-       await sleep(159);
-       await startr();
-       await sleep(150);
+       displayword(dat[ii]);
+       if(!ii)await startr();
     }
-    else gamewon();
+    else {await stopr();gamewon();}
 }
 
 function displayword(word){
@@ -85,12 +83,14 @@ function playag(){
 }
 
 function gamelost(){
+    // await stopr();
     out.innerText= "sorry you lost";
     playag(); 
    // console.log("sorry");
 }
 
 function gamewon(){
+    // await stopr();
     out.innerText="woohooo you won";
     playag();
   //  console.log("wohooooo");
@@ -98,7 +98,7 @@ function gamewon(){
 
 
 async function checkres(res){
-    await stopr();
+  //  await stopr();
     //console.log(data);
     let w= res.results[0][0].transcript;
     let fw= w.indexOf(" ");
@@ -113,6 +113,8 @@ async function checkres(res){
     if(word!=dat[ii])
     {
         useroutput(word,0);
+         await stopr();
+        await sleep(2000);
         gamelost();
         return;
     }
